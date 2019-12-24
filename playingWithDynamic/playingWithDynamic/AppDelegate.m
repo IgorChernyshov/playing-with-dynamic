@@ -24,7 +24,12 @@
 
 	File *file = [File new];
 	NSLog(@"File owner is %@ %@", file.ownerName, file.ownerSurname);
+
 	[file changeFileOwnerInDictionary];
+	NSLog(@"File owner is %@ %@", file.ownerName, file.ownerSurname);
+
+	file.ownerName = @"Igor";
+	file.ownerSurname = @"Chernyshov";
 	NSLog(@"File owner is %@ %@", file.ownerName, file.ownerSurname);
 
 	return YES;

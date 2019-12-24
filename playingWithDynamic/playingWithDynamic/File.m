@@ -35,9 +35,12 @@
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)selector
 {
 	NSString *sel = NSStringFromSelector(selector);
-	if ([sel rangeOfString:@"set"].location == 0) {
+	if ([sel rangeOfString:@"set"].location == 0)
+	{
 		return [NSMethodSignature signatureWithObjCTypes:"v@:@"];
-	} else {
+	}
+	else
+	{
 		return [NSMethodSignature signatureWithObjCTypes:"@@:"];
 	}
 }
@@ -45,12 +48,18 @@
 - (void)forwardInvocation:(NSInvocation *)invocation
 {
 	NSString *key = NSStringFromSelector([invocation selector]);
-	if ([key rangeOfString:@"set"].location == 0) {
-		key = [[key substringWithRange:NSMakeRange(3, [key length]-4)] lowercaseString];
+	if ([key rangeOfString:@"set"].location == 0)
+	{
+		// first symbol must be lowercase
+		NSString *firstCharacter = [[key substringWithRange:NSMakeRange(3, 1)] lowercaseString];
+		NSString *otherCharacters = [key substringWithRange:NSMakeRange(4, [key length]-5)];
+		NSString *getterName = [NSString stringWithFormat:@"%@%@", firstCharacter, otherCharacters];
 		NSString *obj;
 		[invocation getArgument:&obj atIndex:2];
-		[self.fileOwner setObject:obj forKey:key];
-	} else {
+		[self.fileOwner setObject:obj forKey:getterName];
+	}
+	else
+	{
 		NSString *obj = [self.fileOwner objectForKey:key];
 		[invocation setReturnValue:&obj];
 	}
